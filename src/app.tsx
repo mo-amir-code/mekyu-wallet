@@ -1,15 +1,18 @@
-import { ThemeProvider } from "./components/theme-provider";
-import { UserProvider } from "./context/GlobalContentAPI";
-import { HomePage } from "./pages";
+import { useEffect } from "preact/hooks";
+import { useUserState } from "./context/GlobalContentAPI";
+import { HomePage, NewUserPage } from "./pages";
+import { Buffer } from "buffer";
 
 const App = () => {
-  return (
-    <UserProvider>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <HomePage />
-      </ThemeProvider>
-    </UserProvider>
-  );
+  const { seed } = useUserState();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.Buffer = Buffer;
+    }
+  }, []);
+
+  return <div>{seed ? <HomePage /> : <NewUserPage />}</div>;
 };
 
 export default App;

@@ -58,6 +58,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const handleSetUp = async () => {
     try {
       const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "");
+      if(!data) return;
+
       if (data?.seed) {
         dispatch({
           type: "SEED",
