@@ -1,10 +1,17 @@
-import { deriveMnemonic, deriveMnemonicToSeed } from "@/lib/wallet";
+import {
+  deriveMnemonic,
+  deriveMnemonicToSeed,
+  deriveSolanaPrivateKey,
+  deriveSolanaPublicKey,
+} from "@/lib/wallet";
 import { useEffect, useState } from "preact/hooks";
 import TypographySmall from "../typography/TypographySmall";
 import { TypographyH4 } from "../typography";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { Button } from "@/components/ui/button";
 import { useUserDispatch } from "@/context/GlobalContentAPI";
+import { setDataInLocalStorage } from "@/lib/utils";
+import { STORAGE_KEY } from "@/lib/data";
 
 const GeneratePhrase = () => {
   const [newPhrases, setNewPhrases] = useState<string | null>(null);
@@ -14,9 +21,29 @@ const GeneratePhrase = () => {
     const p = deriveMnemonic();
     setNewPhrases(p);
     const seed = await deriveMnemonicToSeed(p);
-    console.log("Seed: ", seed);
 
-    
+    const pvtKey = deriveSolanaPrivateKey(seed, 0);
+    // console.log("Pvt: ", pvtKey)
+    const wallet = deriveSolanaPublicKey(pvtKey);
+    // console.log("Pub: ", wallet)
+
+    dispatch({
+      type: "ADD_WALLET",
+      payload: wallet.toString(),
+    });
+    dispatch({
+      type: "SEED",
+      payload: seed,
+    });
+
+    const data = {
+      seed,
+      wallets: [wallet.toString()],
+      totalAmount: 0,
+      selectedChain: "solana",
+    };
+
+    setDataInLocalStorage(STORAGE_KEY, data);
   };
 
   useEffect(() => {

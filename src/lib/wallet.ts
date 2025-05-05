@@ -1,6 +1,7 @@
 import nacl from "tweetnacl";
-import { generateMnemonic, mnemonicToSeed, mnemonicToSeedSync } from "bip39";
-import { derivePath } from "ed25519-hd-key";
+import { generateMnemonic, mnemonicToSeed } from "bip39";
+// import * as ed25519 from 'ed25519-hd-key';
+import { HDKey } from "micro-ed25519-hdkey";
 import { Keypair } from "@solana/web3.js";
 import { HDNodeWallet, Wallet } from "ethers";
 
@@ -23,8 +24,11 @@ const deriveSolanaPrivateKey = (
   walletNumber: number
 ): Uint8Array => {
   const derivationPath = `m/44'/501'/${walletNumber}'/0'`;
-  const derivedSeed = derivePath(derivationPath, seed.toString("hex")).key;
-  const secret = nacl.sign.keyPair.fromSeed(derivedSeed).secretKey;
+  const hd = HDKey.fromMasterSeed(seed.toString("hex"));
+  // const derivedSeed = ed25519.derivePath(derivationPath, seed.toString("hex"));
+  const derivedSeed = hd.derive(derivationPath);
+  // console.log("DSeed: ", derivedSeed)
+  const secret = Keypair.fromSeed(derivedSeed.privateKey).secretKey;
   return secret;
 };
 

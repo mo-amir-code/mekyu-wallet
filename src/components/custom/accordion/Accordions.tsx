@@ -1,19 +1,25 @@
+"use client";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useUserState } from "@/context/GlobalContentAPI";
 
 const Accordions = () => {
+  const { wallets } = useUserState();
+
   return (
     <Accordion type="single" collapsible className="w-full">
-      <AccordionItem value="item-1" >
-        <AccordionTrigger className={"cursor-pointer"} >Is it accessible?</AccordionTrigger>
-        <AccordionContent>
-          Yes. It adheres to the WAI-ARIA design pattern.
-        </AccordionContent>
-      </AccordionItem>
+      {wallets.map((pubKey: string, idx: number) => (
+        <AccordionItem value={`item-${idx + 1}`}>
+          <AccordionTrigger className={"cursor-pointer"}>
+            {pubKey}
+          </AccordionTrigger>
+          <AccordionContent>{pubKey}</AccordionContent>
+        </AccordionItem>
+      ))}
     </Accordion>
   );
 };

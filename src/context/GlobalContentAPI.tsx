@@ -7,12 +7,11 @@ import {
 } from "react";
 import { Action, Dispatch, State } from "./types";
 import { STORAGE_KEY } from "@/lib/data";
+import { getDataFromLocalStorage } from "@/lib/utils";
 
 // 2. Initial state
 const initialState: State = {
   isLoading: true,
-  isAuthenticated: false,
-  password: null,
   seed: null,
   selectedChain: "solana",
   totalAmount: 0,
@@ -24,10 +23,6 @@ function userReducer(state: State, action: Action): State {
   switch (action.type) {
     case "IS_LOADING":
       return { ...state, isLoading: action.payload };
-    case "IS_AUTHENTICATED":
-      return { ...state, isAuthenticated: action.payload };
-    case "PASSWORD":
-      return { ...state, password: action.payload };
     case "SEED":
       return { ...state, seed: action.payload };
     case "SELECT_CHAIN":
@@ -57,8 +52,10 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   const handleSetUp = async () => {
     try {
-      const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "");
-      if(!data) return;
+      let data = getDataFromLocalStorage(STORAGE_KEY);
+      if (!data) return;
+
+      data = JSON.parse(data);
 
       if (data?.seed) {
         dispatch({
@@ -85,13 +82,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         dispatch({
           type: "SELECT_CHAIN",
           payload: data.selectedChain,
-        });
-      }
-
-      if (data?.password) {
-        dispatch({
-          type: "PASSWORD",
-          payload: data.password,
         });
       }
     } catch (error) {

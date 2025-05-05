@@ -4,6 +4,7 @@ import TypographySmall from "../../typography/TypographySmall";
 import { DialogModal } from "../../dialog";
 
 const Wallets = () => {
+  
   return (
     <MaxWidthMD>
       <div>

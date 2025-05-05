@@ -2,8 +2,6 @@ export type ChainType = "ethereum" | "solana";
 
 export type State = {
   isLoading: boolean;
-  isAuthenticated: boolean;
-  password: string | null;
   seed: Buffer | null;
   selectedChain: ChainType;
   totalAmount: number;
@@ -15,8 +13,6 @@ export type Action =
   | { type: "SEED"; payload: Buffer | null }
   | { type: "SELECT_CHAIN"; payload: ChainType }
   | { type: "TOTAL_AMOUNT"; payload: number }
-  | { type: "ADD_WALLET"; payload: string | string[] }
-  | { type: "IS_AUTHENTICATED"; payload: boolean }
-  | { type: "PASSWORD"; payload: string | null };
+  | { type: "ADD_WALLET"; payload: string | string[] };
 
 export type Dispatch = (action: Action) => void;
