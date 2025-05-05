@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
