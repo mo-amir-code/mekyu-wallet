@@ -10,10 +10,10 @@ import { TypographyH4 } from "../typography";
 import { useUserDispatch } from "@/context/GlobalContentAPI";
 import { setDataInLocalStorage } from "@/lib/utils";
 import { STORAGE_KEY } from "@/lib/data";
-import { DialogClose, DialogFooter } from "@/components/ui/dialog";
+// import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-const GeneratePhrase = () => {
+const GeneratePhrase = ({ func }: { func: Function }) => {
   const [newPhrases, setNewPhrases] = useState<string | null>(null);
   const dispatch = useUserDispatch();
 
@@ -45,6 +45,7 @@ const GeneratePhrase = () => {
     };
 
     setDataInLocalStorage(STORAGE_KEY, data);
+    func(false);
   };
 
   const exec = async () => {
@@ -59,7 +60,7 @@ const GeneratePhrase = () => {
   }, []);
 
   return (
-    <>
+    <div className={"space-y-1"}>
       <div className={"space-y-3"}>
         <TypographyH4 content="Seed Phrases" className="font-semibold" />
         <div className={"grid grid-cols-4 gap-4 p-4"}>
@@ -81,14 +82,10 @@ const GeneratePhrase = () => {
         />
       </div>
 
-      <DialogFooter>
-        <DialogClose asChild>
-          <Button onClick={() => handleSetWallet()} type="submit">
-            Okay!
-          </Button>
-        </DialogClose>
-      </DialogFooter>
-    </>
+      <div className={"flex items-center justify-center"} >
+        <Button onClick={() => handleSetWallet()}>Okay!</Button>
+      </div>
+    </div>
   );
 };
 
