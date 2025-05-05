@@ -53,7 +53,7 @@ const GeneratePhrase = () => {
   };
 
   useEffect(() => {
-    if (typeof window != "undefined") {
+    if (typeof window !== "undefined") {
       exec();
     }
   }, []);
