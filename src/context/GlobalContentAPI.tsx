@@ -8,6 +8,7 @@ import {
 import { Action, Dispatch, State } from "./types";
 import { STORAGE_KEY } from "@/lib/data";
 import { getDataFromLocalStorage } from "@/lib/utils";
+import { Buffer } from "buffer";
 
 // 2. Initial state
 const initialState: State = {
@@ -21,6 +22,8 @@ const initialState: State = {
 // 3. Reducer
 function userReducer(state: State, action: Action): State {
   switch (action.type) {
+    case "RESET":
+      return { ...initialState };
     case "IS_LOADING":
       return { ...state, isLoading: action.payload };
     case "SEED":
@@ -29,6 +32,8 @@ function userReducer(state: State, action: Action): State {
       return { ...state, selectedChain: action.payload };
     case "TOTAL_AMOUNT":
       return { ...state, totalAmount: action.payload };
+    case "RESET_WALLET":
+      return { ...state, wallets: [] };
     case "ADD_WALLET":
       const updatedWallets = [
         ...state.wallets,
@@ -53,28 +58,19 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const handleSetUp = async () => {
     try {
       let data = getDataFromLocalStorage(STORAGE_KEY);
-      if (!data) return;
 
-      data = JSON.parse(data);
+      // console.log("Data: ", data)
+
+      if (data == null) return;
+
+      dispatch({
+        type: "RESET_WALLET",
+      });
 
       if (data?.seed) {
         dispatch({
           type: "SEED",
           payload: data.seed,
-        });
-      }
-
-      if (data?.wallets) {
-        dispatch({
-          type: "ADD_WALLET",
-          payload: data.wallets,
-        });
-      }
-
-      if (data?.totalAmount) {
-        dispatch({
-          type: "TOTAL_AMOUNT",
-          payload: data.totalAmount,
         });
       }
 
@@ -84,6 +80,27 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
           payload: data.selectedChain,
         });
       }
+
+      if (data?.selectedChain == "solana" && data?.solana?.wallets) {
+        dispatch({
+          type: "ADD_WALLET",
+          payload: data.solana.wallets,
+        });
+      }
+
+      if (data?.selectedChain === "ethereum" && data?.ethereum?.wallets) {
+        dispatch({
+          type: "ADD_WALLET",
+          payload: data.ethereum.wallets,
+        });
+      }
+
+      // if (data?.totalAmount) {
+      //   dispatch({
+      //     type: "TOTAL_AMOUNT",
+      //     payload: data.totalAmount,
+      //   });
+      // }
     } catch (error) {
       console.error(error);
     }
@@ -95,8 +112,11 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.Buffer = Buffer;
+    }
     handleSetUp();
-  }, []);
+  }, [state.selectedChain]);
 
   return (
     <UserStateContext.Provider value={{ ...state }}>

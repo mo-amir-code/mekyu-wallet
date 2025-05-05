@@ -13,6 +13,8 @@ export type Action =
   | { type: "SEED"; payload: Buffer | null }
   | { type: "SELECT_CHAIN"; payload: ChainType }
   | { type: "TOTAL_AMOUNT"; payload: number }
-  | { type: "ADD_WALLET"; payload: string | string[] };
+  | { type: "ADD_WALLET"; payload: string | string[] }
+  | { type: "RESET_WALLET" }
+  | { type: "RESET" };
 
 export type Dispatch = (action: Action) => void;

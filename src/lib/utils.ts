@@ -11,7 +11,7 @@ const getDataFromLocalStorage = (key: string) => {
     return JSON.parse(data);
   }
 
-  return "{}";
+  return null;
 };
 
 const setDataInLocalStorage = (key: string, data: any) => {

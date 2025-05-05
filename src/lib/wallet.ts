@@ -1,4 +1,4 @@
-import nacl from "tweetnacl";
+// import nacl from "tweetnacl";
 import { generateMnemonic, mnemonicToSeed } from "bip39";
 // import * as ed25519 from 'ed25519-hd-key';
 import { HDKey } from "micro-ed25519-hdkey";
@@ -37,7 +37,10 @@ const deriveSolanaPublicKey = (secret: Uint8Array): string => {
 };
 
 // ETHEREUM
-const deriveEthereumWallet = (seed: Buffer, walletNumber: number): string => {
+const deriveEthereumPublicKey = (
+  seed: Buffer,
+  walletNumber: number
+): string => {
   const privateKey = deriveEthereumPrivateKey(seed, walletNumber);
   return new Wallet(privateKey).address;
 };
@@ -52,11 +55,23 @@ const deriveEthereumPrivateKey = (
   return child.privateKey;
 };
 
+const chainOp = {
+  solana: {
+    derivePublicKey: deriveSolanaPublicKey,
+    derivePrivateKey: deriveSolanaPrivateKey,
+  },
+  ethereum: {
+    derivePublicKey: deriveEthereumPublicKey,
+    derivePrivateKey: deriveEthereumPrivateKey,
+  },
+};
+
 export {
   deriveEthereumPrivateKey,
-  deriveEthereumWallet,
+  deriveEthereumPublicKey,
   deriveSolanaPrivateKey,
   deriveSolanaPublicKey,
   deriveMnemonic,
   deriveMnemonicToSeed,
+  chainOp,
 };
