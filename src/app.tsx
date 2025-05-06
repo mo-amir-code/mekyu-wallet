@@ -12,7 +12,7 @@ const App = () => {
     }
   }, []);
 
-  return <div className={"px-4"}>{seed ? <HomePage /> : <NewUserPage />}</div>;
+  return <div className={"px-2"}>{seed ? <HomePage /> : <NewUserPage />}</div>;
 };
 
 export default App;
