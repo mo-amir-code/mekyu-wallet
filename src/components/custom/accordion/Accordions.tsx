@@ -35,13 +35,13 @@ const Accordions = () => {
   }, [wallets]);
 
   return (
-    <Accordion type="single" collapsible className="max-w-[700px]">
+    <Accordion type="single" collapsible className={"w-full"}>
       {wallets.map((pubKey: string, idx: number) => (
         <AccordionItem value={`item-${idx + 1}`}>
-          <AccordionTrigger className={"cursor-pointer"}>
+          <AccordionTrigger className={"cursor-pointer break-all"}>
             {pubKey}
           </AccordionTrigger>
-          <AccordionContent className={" text-muted-foreground break-words"}>
+          <AccordionContent className={" text-muted-foreground break-all"}>
             {pvtKeys[idx]}
           </AccordionContent>
         </AccordionItem>
